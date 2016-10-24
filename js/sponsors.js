@@ -114,9 +114,11 @@ setTimeout(function(){ // Needs a bit of a delay to work right
     var assets = getAssetTitleElement();
     //var assets = document.getElementsByClassName("pbTitle")[2].children[2];
 
+    //debugger;
     assets.innerHTML += '<a href="#" id="down" style="margin-left:5px;">Download List</a>';
     var down = document.getElementById('down');
-    if(textString.split("\n").length > 3){
+    var textSplitLength = textString.split("\n").length;
+    if(textSplitLength >= 3){
         down.download = iNum + " - Sponsors.txt";
         down.href = "data:text/plain;base64," + btoa(textString);
     }else{
