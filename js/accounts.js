@@ -2,6 +2,22 @@ function refreshBlocks(){
   return document.getElementsByClassName('listRelatedObject');
 }
 
+function dateToday(){
+  var currentDate = new Date();
+  var day = currentDate.getDate();
+  var monthIndex = currentDate.getMonth();
+  var year = currentDate.getFullYear();
+
+  var monthNames = [
+    "Jan", "Feb", "Mar",
+    "Apr", "May", "Jun", "Jul",
+    "Aug", "Sep", "Oct",
+    "Nov", "Dec"
+  ];
+
+  return day + "-" + monthNames[monthIndex] + "-" + year;
+}
+
 function findBlockIndexFromTitle(title){
   var blocks = refreshBlocks();
   for(var i = 0; i < blocks.length; i++){
@@ -69,7 +85,7 @@ function rowsToString(rows){
   return result;
 }
 
-function download(text, filename){
+function downloadAsFile(text, filename){
   var blob = new Blob([text], {type: "text/csv"}); // Types list: https://goo.gl/3EkJSx
   var url = window.URL.createObjectURL(blob);
   var a = document.createElement("a");
@@ -82,10 +98,14 @@ function tryDownload(title){
   var index = findBlockIndexFromTitle(title);
   var blocks = refreshBlocks();
   if(blocks[index].getAttribute("expanded") == "true"){
-    console.log("Block Index: " + index);
-    console.log("Block Expanded? " + blocks[index].getAttribute("expanded"));
-    var text = blockToString(index);
-    download(text, title.toLowerCase() + ".csv");
+    //console.log("Block Index: " + index);
+    //console.log("Block Expanded? " + blocks[index].getAttribute("expanded"));
+    var account = document.getElementById('contactHeaderRow').innerText.trim();
+    var text = account + " - " + title + "\n";
+    text += "Date: " + dateToday() + "\n,,\n";
+    text += blockToString(index);
+
+    downloadAsFile(text, account.toLowerCase() + " " + title.toLowerCase() + ".csv");
     removeButtons();
     addButtons();
   } else {
