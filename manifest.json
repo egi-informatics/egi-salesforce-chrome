@@ -13,8 +13,12 @@
       "js": ["js/sponsors.js"]
     },
     {
-      "matches": ["https://*.salesforce.com/001j*"],
+      "matches": ["https://*.salesforce.com/001j*", "https://*.salesforce.com/003j*"],
       "js": ["js/accounts.js"]
+    },
+    {
+      "matches": ["https://*.salesforce.com/003j*"],
+      "js": ["js/contacts.js"]
     }
   ],
   "browser_action": {
