@@ -17,31 +17,35 @@ for(var i = 0; i < tds.length; i++){
     continue;
   }
 
-  // Adding emails to array
-  if(text.indexOf("@") != -1){
-    emails.push(text);
-    continue;
-  }
-
-  // Only looking for labels from here on down
-  if(!isLabel){
+  var nextText = tds[i + 1].innerText.trim();
+  if(!isLabel || nextText == ""){
     continue;
   }
 
   var isName = text == "name";
   var isPhone = text.indexOf('phone') != -1 || text.indexOf('mobile') != -1;
   var isTitle = text == "title";
-  var nextText = tds[i + 1].innerText.trim();
+  var isEmail = text.indexOf('email') != -1;
 
   if(isName){
     name = nextText;
-    continue;
   }
   if(isTitle){
     title = nextText;
   }
+
+  if(isEmail){
+    emails.push({
+      label: td.innerText.trim(),
+      data: nextText
+    });
+    continue;
+  }
   if(isPhone && nextText.length > 0){
-    phones.push(nextText);
+    phones.push({
+      label: td.innerText.trim(),
+      data: nextText
+    });
     continue;
   }
 }
@@ -71,7 +75,29 @@ function dateToday(){
   return day + "-" + monthNames[monthIndex] + "-" + year;
 }
 
-var result = "";
-result = "";
+function wrap(text){
+  return "\"" + text + "\"";
+}
+var c = ",";
+var n = "\n";
+var empty = c + n;
 
-//download("this is the file", "text.txt");
+var result = wrap("Name:") + c + wrap(name) + n;
+result += wrap("Title:") + c + wrap(title) + n;
+result += wrap("Date:") + c + wrap(dateToday()) + n + empty;
+
+// Listing emails (with titles)
+for(var i = 0; i < emails.length; i++){
+  result += wrap(emails[i].label) + ":" + c + wrap(emails[i].data) + n;
+}
+result += empty;
+
+// Listing phones (with titles)
+for(var i = 0; i < phones.length; i++){
+  result += wrap(phones[i].label) + ":" + c + wrap(phones[i].data) + n;
+}
+
+function downloadQuickInfo(){
+  download(result, name.toLowerCase() + " quick info.csv");
+}
+//download(result, name.toLowerCase() + " quick info.csv");
